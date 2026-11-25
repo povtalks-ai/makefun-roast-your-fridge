@@ -66,16 +66,17 @@ def validate(line: str) -> None:
 
 
 def write_entry(line: str, output_path: str = OUTPUT_PATH) -> str:
-    """Validate the line and write it (with a trailing newline) to the file.
+    """Validate the line and write it (with no trailing newline) to the file.
 
-    Returns the exact text written. The trailing newline is a file
-    convention only; the judged text is the single line itself.
+    Returns the exact text written. The file holds exactly the judged
+    line, so the byte count equals the character count and the gate can
+    never mistake a trailing newline for part of the entry.
     """
     validate(line)
     directory = os.path.dirname(output_path)
     if directory:
         os.makedirs(directory, exist_ok=True)
-    text = line + "\n"
+    text = line
     with open(output_path, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(text)
     return text

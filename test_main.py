@@ -66,6 +66,18 @@ class TestWriteEntry(unittest.TestCase):
             self.assertEqual(text.rstrip("\n"), ROAST)
             self.assertEqual(len(text.rstrip("\n")), len(ROAST))
 
+    def test_file_has_no_trailing_newline(self):
+        # The file must hold exactly the judged line: no trailing
+        # newline, so the byte count equals the character count.
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "entry.txt")
+            write_entry(ROAST, path)
+            with open(path, "rb") as handle:
+                raw = handle.read()
+            self.assertEqual(raw, ROAST.encode("utf-8"))
+            self.assertFalse(raw.endswith(b"\n"))
+            self.assertEqual(len(raw), len(ROAST))
+
     def test_two_runs_are_byte_identical(self):
         # The grader runs the program twice; the output must not vary.
         with tempfile.TemporaryDirectory() as tmp:
